@@ -12,30 +12,30 @@ ALTER TABLE employee ADD CONSTRAINT employee_pk PRIMARY KEY ( personid );
 
 CREATE TABLE grade (
     gradeid      SERIAL,
-    name         char(4000 ) DEFAULT 'Грейд_N' NOT NULL,
+    name         char(1000 ) DEFAULT 'Грейд_N' NOT NULL,
     description  char(5000 )
 );
 
 ALTER TABLE grade ADD CONSTRAINT grade_pk PRIMARY KEY ( gradeid );
 
 CREATE TABLE leave (
-    leaveid          serial,
-    isvacation       CHAR(1) NOT NULL,
+    leaveid          SERIAL,
+    isvacation       boolean DEFAULT false,
     start_date          DATE NOT NULL,
     end_date             DATE NOT NULL,
-    person_personid  serial
+    person_personid  INTEGER
 );
 
 ALTER TABLE leave ADD CONSTRAINT leave_pk PRIMARY KEY ( leaveid );
 
 CREATE TABLE person (
     personid             serial,
-    name                 char(4000 ) DEFAULT 'Человек_N' NOT NULL,
-    email                char(5000 ) NOT NULL,
-    workphonenumber      char(5000 ),
-    personalphonenumber  char(5000 ) NOT NULL,
-    "Comment"            char(5000 ),
-    isemployee           CHAR(1) NOT NULL
+    name                 char(4000) DEFAULT 'Человек_N' NOT NULL,
+    email                char(400) NOT NULL,
+    workphonenumber      char(20),
+    personalphonenumber  char(20) NOT NULL,
+    "Comment"            char(5000),
+    isemployee           boolean DEFAULT false
 );
 
 ALTER TABLE person ADD CONSTRAINT person_pk PRIMARY KEY ( personid );
@@ -45,14 +45,19 @@ CREATE TABLE personright (
     right_rightid    INTEGER NOT NULL
 );
 
+CREATE TABLE personemployee (
+    person_personid  INTEGER NOT NULL,
+    employee_personid    INTEGER NOT NULL
+);
+
 CREATE TABLE personskill (
     skill_skillid    INTEGER NOT NULL,
     person_personid  INTEGER NOT NULL
 );
 
 CREATE TABLE project (
-    projectid  INTEGER NOT NULL,
-    name       char(4000 ) DEFAULT 'Проект_N' NOT NULL,
+    projectid  SERIAL,
+    name       char(4000) DEFAULT 'Проект_N' NOT NULL,
     start_date    DATE NOT NULL,
     end_date       DATE NOT NULL
 );
@@ -60,7 +65,7 @@ CREATE TABLE project (
 ALTER TABLE project ADD CONSTRAINT project_pk PRIMARY KEY ( projectid );
 
 CREATE TABLE projectrecord (
-    recordid           INTEGER NOT NULL,
+    recordid           SERIAL,
     hoursperweek       FLOAT(2) NOT NULL,
     start_date           DATE NOT NULL,
     end_date                DATE,
@@ -76,23 +81,23 @@ CREATE TABLE requiredskill (
 );
 
 CREATE TABLE rightt (
-    rightid  INTEGER NOT NULL,
-    name     char(4000 ) DEFAULT 'Право_N' NOT NULL
+    rightid  SERIAL,
+    name     char(4000) DEFAULT 'Право_N' NOT NULL
 );
 
 ALTER TABLE rightt ADD CONSTRAINT right_pk PRIMARY KEY ( rightid );
 
 CREATE TABLE skill (
-    skillid      INTEGER NOT NULL,
-    name         char(4000 ) DEFAULT 'Навык_N' NOT NULL,
-    description  char(5000 )
+    skillid      SERIAL,
+    name         char(4000) DEFAULT 'Навык_N' NOT NULL,
+    description  char(5000)
 );
 
 ALTER TABLE skill ADD CONSTRAINT skill_pk PRIMARY KEY ( skillid );
 
 CREATE TABLE task (
-    taskid             INTEGER NOT NULL,
-    description        char(5000 ) NOT NULL,
+    taskid             SERIAL,
+    description        char(5000) NOT NULL,
     hours              FLOAT(2) NOT NULL,
     project_projectid  INTEGER NOT NULL
 );
@@ -100,8 +105,8 @@ CREATE TABLE task (
 ALTER TABLE task ADD CONSTRAINT task_pk PRIMARY KEY ( taskid );
 
 CREATE TABLE vacancy (
-    vacancyid          INTEGER NOT NULL,
-    description        char(5000 ),
+    vacancyid          SERIAL,
+    description        char(5000),
     grade_gradeid      INTEGER NOT NULL,
     project_projectid  INTEGER NOT NULL
 );
@@ -119,6 +124,14 @@ ALTER TABLE leave
 ALTER TABLE personright
     ADD CONSTRAINT personright_person_fk FOREIGN KEY ( person_personid )
         REFERENCES person ( personid );
+
+ALTER TABLE personemployee
+    ADD CONSTRAINT personemployee_person_fk FOREIGN KEY ( person_personid )
+        REFERENCES person ( personid );
+
+ALTER TABLE personemployee
+    ADD CONSTRAINT personemployee_employee_fk FOREIGN KEY ( employee_personid )
+        REFERENCES employee ( personid );
 
 ALTER TABLE personright
     ADD CONSTRAINT personright_right_fk FOREIGN KEY ( right_rightid )

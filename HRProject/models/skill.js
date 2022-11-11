@@ -63,6 +63,28 @@ const showAll = async(req, res) => {
     res.status(200).send(JSON.stringify(results));
 }
 
+const findById = (req, res) => {
+    const skill = req.body
+    findSkillById(skill.id).then((results) => {
+        res.status(200).json(JSON.stringify(results))
+    }).catch((error) => {
+        console.log(error)
+        res.status(500).send()
+    })
+}
+
+const findSkillById = async(skillid) => {
+    var sql = `
+            SELECT * FROM skill WHERE skillid = ${ skillid }
+            `;
+    const results = await pool
+        .query(sql)
+        .then((data) => {
+            return data.rows;
+        })
+    return results;
+}
+
 const findByName = (req, res) => {
     const skill = req.body
     findSkillByName(skill).then((results) => {
@@ -170,5 +192,6 @@ module.exports = {
     findSkillByName,
     updateName,
     updateSkillName,
-    showAll
+    showAll,
+    findById
 }

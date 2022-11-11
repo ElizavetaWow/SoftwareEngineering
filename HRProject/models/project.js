@@ -257,6 +257,16 @@ const findProjectByEnd = async(project) => {
     return results;
 }
 
+const findById = async(req, res) => {
+    const project = req.body
+    findProjectById(project.id).then((results) => {
+        res.status(200).json(JSON.stringify(results))
+    }).catch((error) => {
+        console.log(error)
+        res.status(500).send()
+    })
+}
+
 const findProjectById = async(projectid) => {
     var sql = `
             SELECT * FROM project WHERE projectid = ${projectid}
@@ -393,6 +403,7 @@ module.exports = {
     findByNameStart,
     findByNameEnd,
     findByStartEnd,
+    findById,
     updateName,
     updateStart,
     updateEnd,

@@ -160,6 +160,26 @@ const updateGradeName = async(grade) => {
     }
 }
 
+const findById = async(req, res) => {
+    const grade = req.body
+    findGradeById(grade.id).then((results) => {
+        res.status(200).json(JSON.stringify(results))
+    }).catch((error) => {
+        console.log(error)
+        res.status(500).send()
+    })
+}
+
+const findGradeById = async(gradeid) => {
+    var sql = `SELECT * FROM grade WHERE gradeid = ${ gradeid }`;
+    const results = await pool
+        .query(sql)
+        .then((data) => {
+            return data.rows[0];
+        })
+    return results;
+}
+
 module.exports = {
     create,
     createGrade,
@@ -170,5 +190,6 @@ module.exports = {
     updateName,
     updateGradeName,
     showAll,
-    findGradeByName
+    findGradeByName,
+    findById
 }

@@ -74,7 +74,7 @@ const findByHours = (req, res) => {
 
 const findById = (req, res) => {
     const task = req.body
-    findTaskById(task).then((results) => {
+    findTaskById(task.id).then((results) => {
         res.status(200).json(JSON.stringify(results))
     }).catch((error) => {
         console.log(error)
@@ -104,9 +104,9 @@ const findTaskByHours = async(task) => {
     return results;
 }
 
-const findTaskById = async(task) => {
+const findTaskById = async(taskid) => {
     var sql = `
-            SELECT * FROM task WHERE taskid = ${ task.taskid }
+            SELECT * FROM task WHERE taskid = ${taskid }
             `;
     const results = await pool
         .query(sql)

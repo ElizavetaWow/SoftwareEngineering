@@ -170,6 +170,28 @@ const findVacancyByDescriptionProject = async(vacancy) => {
     return results;
 }
 
+const findByProject = (req, res) => {
+    const vacancy = req.body
+    findVacancyByProject(vacancy).then((results) => {
+        res.status(200).json(JSON.stringify(results))
+    }).catch((error) => {
+        console.log(error)
+        res.status(500).send()
+    })
+}
+
+const findVacancyByProject = async(vacancy) => {
+    var sql = `
+            SELECT * FROM vacancy WHERE project_projectid = ${vacancy.projectid}
+            `;
+    const results = await pool
+        .query(sql)
+        .then((data) => {
+            return data.rows;
+        })
+    return results;
+}
+
 const findByDescriptionGrade = (req, res) => {
     const vacancy = req.body
     findVacancyByDescriptionGrade(vacancy).then((results) => {
@@ -340,5 +362,6 @@ module.exports = {
     updateGrade,
     updateProject,
     showAll,
-    findById
+    findById,
+    findByProject
 }

@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { Pool, Client } = require("pg");
+const { Pool } = require("pg");
 
 const credentials = {
     user: "root",
@@ -7,8 +7,7 @@ const credentials = {
     password: "root",
 };
 const pool = new Pool(credentials);
-const path = require('path');
-const { Console } = require('console');
+
 
 const signup = (req, res) => {
     const user = req.body
@@ -26,15 +25,12 @@ const signup = (req, res) => {
             delete user.password_digest
             if (create_status == 'true') {
                 res.status(201).json({ "status": true, "result": 'Signup successful!' })
-            }
-            else if (create_status == 'already existed'){
-                res.status(200).json({ "status": false, "result": "Already existed!" })
-            }
-            else {
+            } else if (create_status == 'already exists') {
+                res.status(200).json({ "status": false, "result": "Already exists!" })
+            } else {
                 res.status(200).json({ "status": false, "result": "Request Failed!" })
-            } 
-        }
-        ).catch ((error) =>{
+            }
+        }).catch((error) => {
             console.log(error)
             res.status(200).json({ "status": false, "result": "Request Failed!" })
         })
@@ -56,7 +52,7 @@ const signin = (req, res) => {
             res.status(200).json({ "status": true, "result": 'Signin successful!' })
             res.status(200);
         })
-        .catch ((error) =>{
+        .catch((error) => {
             console.log(error)
             res.status(200).json({ "status": false, "result": "Request Failed!" })
         })
@@ -94,18 +90,18 @@ const encryptPassowrd = (password, salt) => {
     return crypto.scryptSync(password, salt, 32).toString('hex');
 };
 
-const createUser = async (user) => {
+const createUser = async(user) => {
     try {
         const results = findUser(user).then(async foundUser => {
-            if (foundUser == undefined){
+            if (foundUser == undefined) {
                 var sql = `INSERT INTO employee(login, password_digest, token) VALUES('${user.username}', '${user.password_digest}', '${user.token}')`;
                 await pool.query(sql);
                 return 'true';
             }
-            return 'already existed';
+            return 'already exists';
         })
         return results;
-        
+
     } catch (error) {
         console.error(error.stack);
         return 'false';
@@ -113,7 +109,7 @@ const createUser = async (user) => {
 
 }
 
-const findUser = async (userReq) => {
+const findUser = async(userReq) => {
     var sql = `SELECT * FROM employee WHERE login = '${userReq.username}'`;
     const results = await pool
         .query(sql)
@@ -123,12 +119,10 @@ const findUser = async (userReq) => {
     return results;
 }
 
-const updateUserToken = async (token, user) => {
+const updateUserToken = async(token, user) => {
     var sql = `UPDATE employee SET token = '${token}' WHERE personid = ${user.personid}`;
     await pool.query(sql);
 }
-
-
 
 const authenticate = (userReq) => {
     findByToken(userReq.token)
@@ -141,11 +135,27 @@ const authenticate = (userReq) => {
         })
 }
 
-const findByToken = async (token) => {
-    return await pool.query(`SELECT * FROM employee WHERE token = '${token}'`).then((data) => data.rows[0])
+const showAll = async(req, res) => {
+    const results = await pool.query("SELECT * FROM employee")
+        .then((data) => {
+            return data.rows;
+        })
+        .catch(() => {
+            throw new Error("Request failed");
+        });
+
+    res.status(200).send(JSON.stringify(results));
+}
+
+const findByToken = async(token) => {
+    const results = await pool.query(`SELECT * FROM employee WHERE token = '${token}'`).then((data) => {
+        return data.rows[0]
+    })
+    return results
 }
 
 module.exports = {
     signup,
     signin,
+    showAll
 }

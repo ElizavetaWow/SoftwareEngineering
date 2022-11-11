@@ -1,10 +1,12 @@
 const crypto = require('crypto');
-const { Client } = require("pg");
-const client = new Client({
-    password: "root",
+const { Pool, Client } = require("pg");
+
+const credentials = {
     user: "root",
     host: "postgres",
-});
+    password: "root",
+};
+const pool = new Pool(credentials);
 const path = require('path');
 
 const signup = (req, res) => {
@@ -19,7 +21,7 @@ const signup = (req, res) => {
             user.token = token
         })
         .then(() => createUser(user))
-        .then(user => {
+        .then(() => {
             delete user.password_digest
             res.status(201);
             res.sendFile(path.join(__dirname, '../public/index.html'));
@@ -78,45 +80,29 @@ const encryptPassowrd = (password, salt) => {
     return crypto.scryptSync(password, salt, 32).toString('hex');
 };
 
-const createUser = async(user) => {
+const createUser = async (user) => {
     try {
         var sql = `INSERT INTO employee(login, password_digest, token) VALUES('${user.username}', '${user.password_digest}', '${user.token}')`;
-        await client.connect();
-        await client.query(sql);
-        await client.end();
-        return user
+        await pool.query(sql);
     } catch (error) {
         console.error(error.stack);
-        return user   
     }
 
 }
 
-const findUser = async(userReq) => {
-    await client.connect();
-    var sql = `SELECT * FROM employee WHERE login = '${ userReq.username }'`;
-    const results = await client
+const findUser = async (userReq) => {
+    var sql = `SELECT * FROM employee WHERE login = '${userReq.username}'`;
+    const results = await pool
         .query(sql)
         .then((data) => {
             return data.rows[0];
         })
-    await client.end();
     return results;
-
 }
 
-const updateUserToken = async(token, user) => {
-    await client.connect();
-    const results = await client
-        .query(`
-UPDATE employee SET token = ${ token }
-WHERE personid = ${ user.id })
-`)
-        .then((data) => {
-            return data.rows[0]
-        })
-    await client.end();
-    return results;
+const updateUserToken = async (token, user) => {
+    var sql = `UPDATE employee SET token = '${token}' WHERE personid = ${user.personid}`;
+    await pool.query(sql);
 }
 
 
@@ -132,13 +118,8 @@ const authenticate = (userReq) => {
         })
 }
 
-const findByToken = async(token) => {
-    await client.connect();
-    return await client
-        .query(`
-SELECT * FROM employee WHERE token = ${ token })
-`).then((data) => data.rows[0])
-    await client.end()
+const findByToken = async (token) => {
+    return await pool.query(`SELECT * FROM employee WHERE token = '${token}'`).then((data) => data.rows[0])
 }
 
 module.exports = {

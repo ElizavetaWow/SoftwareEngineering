@@ -1,6 +1,6 @@
 // @ts-check
 
-const {Pool, Client } = require("pg");
+const { Pool, Client } = require("pg");
 const express = require("express");
 const app = express();
 const port = 8080;
@@ -10,13 +10,8 @@ const credentials = {
     user: "root",
     host: "postgres",
     password: "root",
-  };
-
-const client = new Client({
-    password: "root",
-    user: "root",
-    host: "postgres",
-});
+};
+const pool = new Pool(credentials);
 
 const bodyParser = require('body-parser')
 app.use(bodyParser.json());
@@ -26,23 +21,14 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.static("public"));
 
-app.get("/employees", async(req, res) => {
-    const client = new Client({
-        password: "root",
-        user: "root",
-        host: "postgres",
-    });
-    await client.connect();
-    const results = await client
-        .query("SELECT * FROM employee")
+app.get("/employees", async (req, res) => {
+    const results = await pool.query("SELECT * FROM employee")
         .then((payload) => {
             return payload.rows;
         })
         .catch(() => {
             throw new Error("Query failed");
-        })
-    await client.end();
-
+        });
     res.setHeader("Content-Type", "application/json");
     res.status(200);
     res.send(JSON.stringify(results));
@@ -63,7 +49,7 @@ app.get("/employees", async(req, res) => {
 }); */
 
 app.post('/signup', User.signup);
-app.post('/login', User.signup);
+app.post('/login', User.signin);
 
 
 app.get("/login", (req, res) => {
@@ -73,7 +59,7 @@ app.get("/login", (req, res) => {
 
 
 
-(async() => {
+(async () => {
     app.listen(port, () => {
         console.log(`Example app listening at http://localhost:${port}`);
     });

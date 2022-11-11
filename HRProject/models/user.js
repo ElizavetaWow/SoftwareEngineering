@@ -27,49 +27,6 @@ const signup = (req, res) => {
         .catch((err) => console.error(err))
 }
 
-
-
-const hashPassword = (password) => {
-    const salt = crypto.randomBytes(16).toString('hex');
-    return new Promise((resolve, reject) =>
-        resolve(encryptPassowrd(password, salt) + salt)
-    )
-}
-
-const encryptPassowrd = (password, salt) => {
-    return crypto.scryptSync(password, salt, 32).toString('hex');
-};
-
-const createUser = async(user) => {
-    try {
-        const client = new Client({
-            password: "root",
-            user: "root",
-            host: "postgres",
-        });
-        var sql = `INSERT INTO employees(login, password_digest, token) VALUES('${user.username}', '${user.password_digest}', '${user.token}')`;
-        await client.connect();
-        await client.query(sql);
-    } catch (error) {
-        console.error(error.stack);
-
-    } finally {
-        await client.end();
-
-        return user
-    }
-
-}
-
-const createToken = () => {
-    return new Promise((resolve, reject) => {
-        crypto.randomBytes(16, (err, data) => {
-            err ? reject(err) : resolve(data.toString('base64'))
-        })
-    })
-}
-
-
 const signin = (req, res) => {
     const userReq = req.body
     let user
@@ -89,9 +46,55 @@ const signin = (req, res) => {
         .catch((err) => console.error(err))
 }
 
+const createToken = () => {
+    return new Promise((resolve, reject) => {
+        crypto.randomBytes(16, (err, data) => {
+            err ? reject(err) : resolve(data.toString('base64'))
+        })
+    })
+}
+
+const checkPassword = (reqPassword, foundUser) => {
+    return new Promise((resolve, reject) => {
+        const salt = foundUser.password_digest.slice(64, 96);
+        const originalPassHash = foundUser.password_digest.slice(0, 64);
+        const currentPassHash = encryptPassowrd(reqPassword, salt);
+        if (originalPassHash === currentPassHash) {
+            resolve(originalPassHash === currentPassHash)
+        } else {
+            reject(new Error('Passwords do not match.'))
+        }
+    })
+}
+
+const hashPassword = (password) => {
+    const salt = crypto.randomBytes(16).toString('hex');
+    return new Promise((resolve, reject) =>
+        resolve(encryptPassowrd(password, salt) + salt)
+    )
+}
+
+const encryptPassowrd = (password, salt) => {
+    return crypto.scryptSync(password, salt, 32).toString('hex');
+};
+
+const createUser = async(user) => {
+    try {
+        var sql = `INSERT INTO employee(login, password_digest, token) VALUES('${user.username}', '${user.password_digest}', '${user.token}')`;
+        await client.connect();
+        await client.query(sql);
+        await client.end();
+        return user
+    } catch (error) {
+        console.error(error.stack);
+        return user   
+    }
+
+}
+
 const findUser = async(userReq) => {
     await client.connect();
-    var sql = `SELECT * FROM employees WHERE login = '${ userReq.username }'`;
+    var sql = `SELECT * FROM employee WHERE login = '${ userReq.username }'`;
     const results = await client
         .query(sql)
         .then((data) => {
@@ -102,27 +105,12 @@ const findUser = async(userReq) => {
 
 }
 
-const checkPassword = (reqPassword, foundUser) => {
-    return new Promise((resolve, reject) => {
-        const salt = foundUser.password_digest.slice(64);
-        const originalPassHash = foundUser.password_digest.slice(0, 64);
-        const currentPassHash = encryptPassowrd(reqPassword, salt);
-        console.log(originalPassHash)
-        console.log(currentPassHash)
-        if (originalPassHash === currentPassHash) {
-            resolve(originalPassHash === currentPassHash)
-        } else {
-            reject(new Error('Passwords do not match.'))
-        }
-    })
-}
-
 const updateUserToken = async(token, user) => {
     await client.connect();
     const results = await client
         .query(`
-UPDATE employees SET token = ${ token }
-WHERE id = ${ user.id })
+UPDATE employee SET token = ${ token }
+WHERE personid = ${ user.id })
 `)
         .then((data) => {
             return data.rows[0]
@@ -130,6 +118,8 @@ WHERE id = ${ user.id })
     await client.end();
     return results;
 }
+
+
 
 const authenticate = (userReq) => {
     findByToken(userReq.token)
@@ -146,7 +136,7 @@ const findByToken = async(token) => {
     await client.connect();
     return await client
         .query(`
-SELECT * FROM employees WHERE token = ${ token })
+SELECT * FROM employee WHERE token = ${ token })
 `).then((data) => data.rows[0])
     await client.end()
 }

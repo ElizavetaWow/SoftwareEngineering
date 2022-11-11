@@ -1,11 +1,16 @@
 // @ts-check
 
-const { Client } = require("pg");
+const {Pool, Client } = require("pg");
 const express = require("express");
 const app = express();
 const port = 8080;
 const User = require('./models/user.js');
 const path = require('path');
+const credentials = {
+    user: "root",
+    host: "postgres",
+    password: "root",
+  };
 
 const client = new Client({
     password: "root",
@@ -29,7 +34,7 @@ app.get("/employees", async(req, res) => {
     });
     await client.connect();
     const results = await client
-        .query("SELECT * FROM employees")
+        .query("SELECT * FROM employee")
         .then((payload) => {
             return payload.rows;
         })

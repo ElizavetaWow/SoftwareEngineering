@@ -5,8 +5,8 @@ fetch("/employees")
             const cardTemplate = document.querySelector("template");
             const card = cardTemplate.content.cloneNode(true);
 
-            card.querySelector("h4").innerText = employee.name;
-            card.querySelector("p").innerText = employee.title;
+            card.querySelector("h4").innerText = employee.login;
+            card.querySelector("p").innerText = employee.login;
 
             document.body.appendChild(card);
         });

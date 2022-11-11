@@ -8,6 +8,7 @@ const credentials = {
 };
 const pool = new Pool(credentials);
 const path = require('path');
+const { Console } = require('console');
 
 const signup = (req, res) => {
     const user = req.body
@@ -21,12 +22,22 @@ const signup = (req, res) => {
             user.token = token
         })
         .then(() => createUser(user))
-        .then(() => {
+        .then((create_status) => {
             delete user.password_digest
-            res.status(201);
-            res.sendFile(path.join(__dirname, '../public/index.html'));
+            if (create_status == 'true') {
+                res.status(201).json({ "status": true, "result": 'Signup successful!' })
+            }
+            else if (create_status == 'already existed'){
+                res.status(200).json({ "status": false, "result": "Already existed!" })
+            }
+            else {
+                res.status(200).json({ "status": false, "result": "Request Failed!" })
+            } 
+        }
+        ).catch ((error) =>{
+            console.log(error)
+            res.status(200).json({ "status": false, "result": "Request Failed!" })
         })
-        .catch((err) => console.error(err))
 }
 
 const signin = (req, res) => {
@@ -42,10 +53,13 @@ const signin = (req, res) => {
         .then(token => updateUserToken(token, user))
         .then(() => {
             delete user.password_digest
+            res.status(200).json({ "status": true, "result": 'Signin successful!' })
             res.status(200);
-            res.sendFile(path.join(__dirname, '../public/index.html'));
         })
-        .catch((err) => console.error(err))
+        .catch ((error) =>{
+            console.log(error)
+            res.status(200).json({ "status": false, "result": "Request Failed!" })
+        })
 }
 
 const createToken = () => {
@@ -82,10 +96,19 @@ const encryptPassowrd = (password, salt) => {
 
 const createUser = async (user) => {
     try {
-        var sql = `INSERT INTO employee(login, password_digest, token) VALUES('${user.username}', '${user.password_digest}', '${user.token}')`;
-        await pool.query(sql);
+        const results = findUser(user).then(async foundUser => {
+            if (foundUser == undefined){
+                var sql = `INSERT INTO employee(login, password_digest, token) VALUES('${user.username}', '${user.password_digest}', '${user.token}')`;
+                await pool.query(sql);
+                return 'true';
+            }
+            return 'already existed';
+        })
+        return results;
+        
     } catch (error) {
         console.error(error.stack);
+        return 'false';
     }
 
 }

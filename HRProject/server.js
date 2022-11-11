@@ -34,9 +34,8 @@ app.get("/employees", async (req, res) => {
     res.send(JSON.stringify(results));
 });
 
-/* app.get("/projects", async(req, res) => {
-    const results = await client
-        .query("SELECT * FROM projects")
+app.get("/projects", async (req, res) => {
+    const results = await pool.query("SELECT * FROM project")
         .then((payload) => {
             return payload.rows;
         })
@@ -46,13 +45,15 @@ app.get("/employees", async (req, res) => {
     res.setHeader("Content-Type", "application/json");
     res.status(200);
     res.send(JSON.stringify(results));
-}); */
+});
+
+
 
 app.post('/signup', User.signup);
-app.post('/login', User.signin);
+app.post('/signin', User.signin);
 
 
-app.get("/login", (req, res) => {
+app.get("/signin", (req, res) => {
     res.sendFile(path.join(__dirname, '/public/login.html'));
 });
 

@@ -235,7 +235,7 @@ const findProjectByName = async(project) => {
 
 const findProjectByStart = async(project) => {
     var sql = `
-            SELECT * FROM project WHERE start_date = $ { project.start_date }
+            SELECT * FROM project WHERE start_date = ${project.start_date}
             `;
     const results = await pool
         .query(sql)
@@ -247,7 +247,7 @@ const findProjectByStart = async(project) => {
 
 const findProjectByEnd = async(project) => {
     var sql = `
-            SELECT * FROM project WHERE end_date = $ { project.end_date }
+            SELECT * FROM project WHERE end_date = ${project.end_date}
             `;
     const results = await pool
         .query(sql)
@@ -257,11 +257,23 @@ const findProjectByEnd = async(project) => {
     return results;
 }
 
+const findProjectById = async(projectid) => {
+    var sql = `
+            SELECT * FROM project WHERE projectid = ${projectid}
+            `;
+    const results = await pool
+        .query(sql)
+        .then((data) => {
+            return data.rows[0];
+        })
+    return results;
+}
+
 const findProjectByNameStartEnd = async(project) => {
     var sql = `
             SELECT * FROM project WHERE(name = '${project.name}'
-                AND start_date = $ { project.start_date }
-                AND end_date = $ { project.end_date })
+                AND start_date = ${ project.start_date }
+                AND end_date = ${ project.end_date })
             `;
     const results = await pool
         .query(sql)

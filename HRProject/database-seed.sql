@@ -89,7 +89,7 @@ ALTER TABLE rightt ADD CONSTRAINT right_pk PRIMARY KEY ( rightid );
 
 CREATE TABLE skill (
     skillid      SERIAL,
-    name         char(4000) DEFAULT 'Навык_N' NOT NULL,
+    name         char(2000) DEFAULT 'Навык_N' NOT NULL,
     description  char(5000)
 );
 
@@ -97,7 +97,7 @@ ALTER TABLE skill ADD CONSTRAINT skill_pk PRIMARY KEY ( skillid );
 
 CREATE TABLE task (
     taskid             SERIAL,
-    description        char(5000) NOT NULL,
+    description        char(2000) NOT NULL,
     hours              FLOAT(2) NOT NULL,
     project_projectid  INTEGER NOT NULL
 );

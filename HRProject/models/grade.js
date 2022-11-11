@@ -169,5 +169,6 @@ module.exports = {
     findByName,
     updateName,
     updateGradeName,
-    showAll
+    showAll,
+    findGradeByName
 }

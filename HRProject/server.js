@@ -4,7 +4,7 @@ const { Pool, Client } = require("pg");
 const express = require("express");
 const app = express();
 const port = 8080;
-const User = require('./models/user.js');
+const Employee = require('./models/employee.js');
 const Project = require('./models/project.js');
 const path = require('path');
 const credentials = {
@@ -22,13 +22,13 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.static("public"));
 
-app.get("/employees", User.showAll);
+app.get("/employees", Employee.showAll);
 app.get("/projects", Project.showAll);
 
 
 
-app.post('/signup', User.signup);
-app.post('/signin', User.signin);
+app.post('/signup', Employee.create);
+app.post('/signin', Employee.signin);
 
 
 app.get("/signin", (req, res) => {

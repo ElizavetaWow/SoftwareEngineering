@@ -9,6 +9,8 @@
 - Попов Илья
 - Гришин Всеволод
 
+## Требования
+https://docs.google.com/document/d/16aePpq-26JNNOyGNtiiFJ3kxLvHgBjtaFiWm6wIsswI/edit
 
 ## Модель данных
 ![Модель БД](DB_model.png)

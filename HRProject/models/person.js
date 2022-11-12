@@ -336,7 +336,7 @@ const deletePerson = async(person) => {
         const results = findPersonByNameEmailWorkPersonalNumberCommentIsEmployee(person).then(async foundPerson => {
             if (foundProject !== undefined) {
                 var sql = `
-            DELETE FROM person WHERE personid = $ { foundPerson.personid }
+            DELETE FROM person WHERE personid = ${ foundPerson.personid }
             `;
                 await pool.query(sql);
                 return 'true';
@@ -665,6 +665,7 @@ const updatePersonIsEmployee = async(person) => {
         return 'false';
     }
 }
+
 
 module.exports = {
     create,

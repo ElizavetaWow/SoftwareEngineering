@@ -1,6 +1,6 @@
 const { Pool } = require("pg");
-const Grade = require('./models/grade.js');
-const Project = require('./models/project.js');
+const Grade = require('./grade.js');
+const Project = require('./project.js');
 const credentials = {
     user: "root",
     host: "postgres",
@@ -293,7 +293,7 @@ const updateGrade = (req, res) => {
 
 const updateVacancyGrade = async(data) => {
     try {
-        foundGrade = Grade.findGradeByName(data.grade_name)
+        let foundGrade = await Grade.findGradeByName(data.grade_name)
         const results = findVacancyById(data.vacancy_id).then(async foundVacancy => {
             if (foundVacancy !== undefined) {
                 var sql = `
@@ -330,7 +330,7 @@ const updateProject = (req, res) => {
 
 const updateVacancyProject = async(data) => {
     try {
-        foundProject = Project.findProjectById(data.projectid)
+        let foundProject = await Project.findProjectById(data.projectid)
         const results = findVacancyById(data.vacancy_id).then(async foundVacancy => {
             if (foundVacancy !== undefined) {
                 var sql = `

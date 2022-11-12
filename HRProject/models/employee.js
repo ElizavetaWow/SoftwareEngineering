@@ -1,8 +1,8 @@
-const crypto = require('crypto');
 const { Pool } = require("pg");
-const Grade = require('./models/grade.js');
+const crypto = require('crypto');
+const Grade = require('./grade.js');
 const credentials = {
-    employee: "root",
+    user: "root",
     host: "postgres",
     password: "root",
 };
@@ -208,7 +208,7 @@ const findByOneproject = (req, res) => {
 
 const findEmployeeByOneproject = async(employee) => {
     var sql = `
-                SELECT * FROM employee WHERE workingononeproject = $ { employee.workingononeproject }
+                SELECT * FROM employee WHERE workingononeproject = ${ employee.workingononeproject }
                 `;
     const results = await pool
         .query(sql)
@@ -229,16 +229,16 @@ const findByGrade = (req, res) => {
 }
 
 const findEmployeeByGrade = async(grade) => {
-    foundGrade = Grade.findGradeByName(grade)
-    var sql = `
-                SELECT * FROM employee WHERE grade_gradeid = $ { foundGrade.gradeid }
-                `;
+    let foundGrade = await Grade.findGradeByName(grade);
+
+    var sql = `SELECT * FROM employee WHERE grade_gradeid = ${ foundGrade.gradeid }`;
     const results = await pool
         .query(sql)
         .then((data) => {
             return data.rows;
         })
     return results;
+
 }
 
 const findByGradeOneproject = (req, res) => {
@@ -272,10 +272,10 @@ const findByGradeOneprojectDismissDate = (req, res) => {
 }
 
 const findEmployeeByGradeOneproject = async(data) => {
-    foundGrade = Grade.findGradeByName(data.grade_name)
+    let foundGrade = await Grade.findGradeByName(data.grade_name)
     var sql = `
-                SELECT * FROM employee WHERE(grade_gradeid = $ { foundGrade.gradeid }
-                    AND workingononeproject = $ { data.employee_workingononeproject })
+                SELECT * FROM employee WHERE(grade_gradeid = ${ foundGrade.gradeid }
+                    AND workingononeproject = ${ data.employee_workingononeproject })
                 `;
     const results = await pool
         .query(sql)
@@ -286,10 +286,10 @@ const findEmployeeByGradeOneproject = async(data) => {
 }
 
 const findEmployeeByGradeDismissDate = async(data) => {
-    foundGrade = Grade.findGradeByName(data.grade_name)
+    let foundGrade = await Grade.findGradeByName(data.grade_name)
     var sql = `
-                SELECT * FROM employee WHERE(grade_gradeid = $ { foundGrade.gradeid }
-                    AND dismiss_date = $ { data.employee_dismiss_date })
+                SELECT * FROM employee WHERE(grade_gradeid = ${ foundGrade.gradeid }
+                    AND dismiss_date = ${ data.employee_dismiss_date })
                 `;
     const results = await pool
         .query(sql)
@@ -300,11 +300,11 @@ const findEmployeeByGradeDismissDate = async(data) => {
 }
 
 const findEmployeeByGradeOneprojectDismissDate = async(data) => {
-    foundGrade = Grade.findGradeByName(data.grade_name)
+    let foundGrade = await Grade.findGradeByName(data.grade_name)
     var sql = `
-                SELECT * FROM employee WHERE(grade_gradeid = $ { foundGrade.gradeid }
-                    AND workingononeproject = $ { data.employee_workingononeproject }
-                    AND dismiss_date = $ { data.employee_dismiss_date })
+                SELECT * FROM employee WHERE(grade_gradeid = ${ foundGrade.gradeid }
+                    AND workingononeproject = ${ data.employee_workingononeproject }
+                    AND dismiss_date = ${ data.employee_dismiss_date })
                 `;
     const results = await pool
         .query(sql)
@@ -409,7 +409,7 @@ const updateEmployeeLogin = async(employee) => {
             if (foundEmployee !== undefined) {
                 var sql = `
                 UPDATE employee SET login = '${employee.newlogin}'
-                WHERE personid = $ { foundEmployee.personid }
+                WHERE personid = ${ foundEmployee.personid }
                 `;
                 await pool.query(sql);
                 return 'true';
@@ -429,7 +429,7 @@ const updateEmployeePassworddigest = async(employee) => {
             if (foundEmployee !== undefined) {
                 var sql = `
                 UPDATE employee SET password_digest = '${employee.password_digest}'
-                WHERE personid = $ { foundEmployee.personid }
+                WHERE personid = ${ foundEmployee.personid }
                 `;
                 await pool.query(sql);
                 return 'true';
@@ -446,7 +446,7 @@ const updateEmployeePassworddigest = async(employee) => {
 const updateEmployeeToken = async(token, employee) => {
     var sql = `
                 UPDATE employee SET token = '${token}'
-                WHERE personid = $ { employee.personid }
+                WHERE personid = ${ employee.personid }
                 `;
     await pool.query(sql);
 }
@@ -457,7 +457,7 @@ const updateEmployeeOneproject = async(employee) => {
             if (foundEmployee !== undefined) {
                 var sql = `
                 UPDATE employee SET workingononeproject = '${employee.workingononeproject}'
-                WHERE personid = $ { foundEmployee.personid }
+                WHERE personid = ${ foundEmployee.personid }
                 `;
                 await pool.query(sql);
                 return 'true';
@@ -477,7 +477,7 @@ const updateEmployeeDismissDate = async(employee) => {
             if (foundEmployee !== undefined) {
                 var sql = `
                 UPDATE employee SET end_date = '${employee.newdismissdate}'
-                WHERE personid = $ { foundEmployee.personid }
+                WHERE personid = ${ foundEmployee.personid }
                 `;
                 await pool.query(sql);
                 return 'true';
@@ -493,12 +493,13 @@ const updateEmployeeDismissDate = async(employee) => {
 
 const updateEmployeeGrade = async(data) => {
     try {
-        foundGrade = Grade.findGradeByName(data.grade_name)
+        let foundGrade = await Grade.findGradeByName(data.grade_name)
+
         const results = findEmployeeById(data.employee_id).then(async foundEmployee => {
             if (foundEmployee !== undefined) {
                 var sql = `
-                UPDATE employee SET grade_gradeid = $ { foundGrade.gradeid }
-                WHERE personid = $ { foundEmployee.personid }
+                UPDATE employee SET grade_gradeid = ${ foundGrade.gradeid }
+                WHERE personid = ${ foundEmployee.personid }
                 `;
                 await pool.query(sql);
                 return 'true';

@@ -84,5 +84,7 @@ module.exports = {
     addRequiredSkill,
     findByVacancy,
     findBySkill,
-    findRecordByVacancySkill
+    findRecordByVacancySkill,
+    findRecordByVacancy,
+    findRecordBySkill
 }

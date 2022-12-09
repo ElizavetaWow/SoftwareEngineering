@@ -363,5 +363,9 @@ module.exports = {
     updateProject,
     showAll,
     findById,
-    findByProject
+    findByProject,
+    findVacancyByDescriptionGradeProject,
+    findVacancyByDescription,
+    findVacancyByDescriptionGrade,
+    findVacancyByProject,
 }

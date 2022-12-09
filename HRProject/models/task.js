@@ -229,5 +229,6 @@ module.exports = {
     updateTask,
     updateTaskHours,
     showAll,
-    findByDescription
+    findByDescription,
+    findTaskByDescription,
 }

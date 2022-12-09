@@ -363,5 +363,13 @@ module.exports = {
     findByProject,
     findByPerson,
     findByPersonProject,
-    updateHoursperweek
+    updateHoursperweek,
+    findProjectrecordByHoursperweek,
+    findProjectrecordByStart,
+    findProjectrecordByEnd,
+    findProjectrecordByStartEnd,
+    findProjectrecordById,
+    findProjectrecordByProject,
+    findProjectrecordByPerson,
+    findProjectrecordByPersonProject,
 }

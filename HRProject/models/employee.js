@@ -578,5 +578,11 @@ module.exports = {
     updateDismissDate,
     showAll,
     updateGrade,
-    findById
+    findById,
+    findEmployeeByDismissDate,
+    findEmployeeByOneproject,
+    findEmployeeByGrade,
+    findEmployeeByGradeOneproject,
+    findEmployeeByGradeDismissDate,
+    findEmployeeByGradeOneprojectDismissDate,
 }

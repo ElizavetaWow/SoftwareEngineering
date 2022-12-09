@@ -305,4 +305,12 @@ module.exports = {
     updateLeaveEnd,
     updateLeaveIsVacation,
     showAll,
+    findLeaveById,
+    findLeaveByIsVacation,
+    findLeaveByStartEndIsVacation,
+    findLeaveByStartIsVacation,
+    findLeaveByEndIsVacation,
+    findLeaveByStart,
+    findLeaveByEnd,
+    findLeaveByStartEnd,
 }

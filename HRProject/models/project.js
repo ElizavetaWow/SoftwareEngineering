@@ -235,7 +235,7 @@ const findProjectByName = async(project) => {
 
 const findProjectByStart = async(project) => {
     var sql = `
-            SELECT * FROM project WHERE start_date = ${project.start_date}
+            SELECT * FROM project WHERE start_date = '${project.start_date}'
             `;
     const results = await pool
         .query(sql)
@@ -280,6 +280,7 @@ const findProjectById = async(projectid) => {
 }
 
 const findProjectByNameStartEnd = async(project) => {
+
     var sql = `
             SELECT * FROM project WHERE(name = '${project.name}'
                 AND start_date = '${ project.start_date }'
@@ -288,7 +289,7 @@ const findProjectByNameStartEnd = async(project) => {
     const results = await pool
         .query(sql)
         .then((data) => {
-            return data.rows[0];
+            return data.rows;
         })
     return results;
 }
@@ -407,5 +408,12 @@ module.exports = {
     updateName,
     updateStart,
     updateEnd,
-    showAll
+    showAll,
+    findProjectByNameStartEnd,
+    findProjectByNameStart, 
+    findProjectByNameEnd,
+    findProjectByStartEnd,
+    findProjectByEnd,
+    findProjectByStart,
+    findProjectByName
 }

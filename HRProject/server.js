@@ -33,8 +33,9 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.static("public"));
 
+
 app.get("/employees", Employee.showAll);
-app.get("/projects", Project.showAll);
+
 app.get("/grades", Grade.showAll);
 app.get("/projectrecords", ProjectRecord.showAll);
 app.get("/rights", Rightt.showAll);
@@ -65,6 +66,58 @@ app.post('/signin', Employee.signin);
 
 app.post('/employees/update', Employee.updateGrade);
 app.post('/employees/find/bygrade', Employee.findByGrade);
+
+//projects
+app.get("/projects", (req, res) => {
+    res.sendFile(path.join(__dirname, '/public/projects.html'));
+});
+app.get("/projects/all", Project.showAll);
+app.post('/projects/find',  (req, res) => {
+    const project = req.body;
+    if (project.name && project.start_date && project.end_date){
+        project.start_date = new Date(project.start_date).toISOString()
+        project.end_date = new Date(project.end_date).toISOString()
+        Project.findProjectByNameStartEnd(project).then((results) => {
+            res.json(JSON.stringify(results))})
+    }
+    else if (project.name && project.start_date && !project.end_date){
+        project.start_date = new Date(project.start_date).toISOString()
+        Project.findProjectByNameStart(project).then((results) => {
+            res.json(JSON.stringify(results))})
+    }
+    else if (project.name && !project.start_date && project.end_date){
+        project.end_date = new Date(project.end_date).toISOString()
+        Project.findProjectByNameEnd(project).then((results) => {
+            res.json(JSON.stringify(results))})
+    }
+    else if (!project.name && project.start_date && project.end_date){
+        project.start_date = new Date(project.start_date).toISOString()
+        project.end_date = new Date(project.end_date).toISOString()
+        Project.findProjectByStartEnd(project).then((results) => {
+            res.json(JSON.stringify(results))})
+    }
+    else if (project.name && !project.start_date && !project.end_date){
+        Project.findProjectByName(project).then((results) => {
+            res.json(JSON.stringify(results))})
+    }
+    else if (!project.name && project.start_date && !project.end_date){
+        project.start_date = new Date(project.start_date).toISOString()
+        Project.findProjectByStart(project).then((results) => {
+            res.json(JSON.stringify(results))})
+    }
+    else if (!project.name && !project.start_date && project.end_date){
+        project.end_date = new Date(project.end_date).toISOString()
+        Project.findProjectByEnd(project).then((results) => {
+            res.json(JSON.stringify(results))})
+    }
+    else {
+        Project.findProjectByEnd(project).then((results) => {
+            res.json(JSON.stringify(results))})
+        res.redirect("/projects/all")
+    }
+    
+});
+
 
 app.get("/signin", (req, res) => {
     res.sendFile(path.join(__dirname, '/public/login.html'));

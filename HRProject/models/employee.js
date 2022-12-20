@@ -134,8 +134,10 @@ const deleteAll = async(req, res) => {
 }
 
 const findById = async(req, res) => {
-    const employee = req.body
-    findEmployeeById(employee.id).then((results) => {
+    const employee = req.body;
+    res.status(200).json(JSON.stringify(req.body))
+    console.log(employee);
+    findEmployeeById(employee.personid).then((results) => {
         res.status(200).json(JSON.stringify(results))
     }).catch((error) => {
         console.log(error)
@@ -578,11 +580,5 @@ module.exports = {
     updateDismissDate,
     showAll,
     updateGrade,
-    findById,
-    findEmployeeByDismissDate,
-    findEmployeeByOneproject,
-    findEmployeeByGrade,
-    findEmployeeByGradeOneproject,
-    findEmployeeByGradeDismissDate,
-    findEmployeeByGradeOneprojectDismissDate,
+    findById
 }

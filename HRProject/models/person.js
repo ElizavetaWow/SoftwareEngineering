@@ -316,7 +316,7 @@ const createPerson = async(person) => {
             if (foundPerson == undefined) {
                 var sql = `
             INSERT INTO person(name, email, workphonenumber, personalphonenumber, "Comment", isemployee) VALUES('${person.name}', 
-                              '${person.email}', '${person.workphonenumber}', '${person.personalphonenumber}', ${person.comment}, ${person.isemployee})
+                              '${person.email}', ${person.workphonenumber}, ${person.personalphonenumber}, '', ${person.isemployee})
             `;
                 await pool.query(sql);
                 return 'true';
@@ -436,12 +436,12 @@ const findPersonById = async(personid) => {
 }
 
 const findPersonByNameEmailWorkPersonalNumberCommentIsEmployee = async(person) => {
+    console.log(typeof(person.workphonenumber));
     var sql = `
             SELECT * FROM person WHERE(name = '${person.name}'
                 AND email = '${ person.email }'
-                AND workphonenumber = ${ person.workphonenumber }
-                AND personalphonenumber = ${person.personalphonenumber}
-                AND "Comment" = '${person.comment}'
+                AND workphonenumber = '${ person.workphonenumber }'
+                AND personalphonenumber = '${person.personalphonenumber}'
                 AND isemployee = ${person.isemployee}) 
             `;
     const results = await pool
@@ -692,19 +692,5 @@ module.exports = {
     updateComment,
     updateIsEmployee,
     showAll,
-    findPersonById,
-    findPersonByName,
-    findPersonByEmail,
-    findPersonByWorkPhoneNumber,
-    findPersonByPersonalPhoneNumber,
-    findPersonByComment,
-    findPersonByIsEmployee,
-    findPersonByNameEmailWorkPersonalNumberCommentIsEmployee,
-    findPersonByNameEmail,
-    findPersonByNameWorkPhoneNumber,
-    findPersonByNamePersonalPhoneNumber,
-    findPersonByEmailWorkPhoneNumber,
-    findPersonByEmailPersonalPhoneNumber,
-    findPersonByNameComment,
-    findPersonByNameIsEmployee,
+    findById
 }

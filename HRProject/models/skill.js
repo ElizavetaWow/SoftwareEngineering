@@ -114,7 +114,7 @@ const updateName = (req, res) => {
 const createSkill = async(skill) => {
     try {
         const results = findSkillByName(skill).then(async foundSkill => {
-            if (foundSkill == undefined) {
+            if (foundSkill.length==0) {
                 var sql = `
             INSERT INTO skill(name, description) VALUES('${skill.name}', '${skill.description}')
             `;

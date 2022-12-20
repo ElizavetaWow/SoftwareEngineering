@@ -6,7 +6,9 @@ fetch("/employees")
             const card = cardTemplate.content.cloneNode(true);
 
             card.querySelector("h4").innerText = employee.login;
-            card.id = employee.personid;
+            card.querySelector(".card").id = employee.personid.toString();
+            //card.querySelector("h5").innerText = 'aaaaa';
+            card.id = employee.personid.toString();
             card.employee = employee.login;
     //         fetch("/skills").then((response) => response.json()).then((data) => {
     //             data.forEach((skill) => {
@@ -18,23 +20,4 @@ fetch("/employees")
             document.body.appendChild(card);
         });
     });
-
-    function find(id, employee)
-    {
-        window.location.href='skills.html'
-        fetch("/personskills/"+id)
-        .then((response) => response.json())
-        .then((data) => {
-            var skills = [];
-            data.forEach((skill) => {
-                skills.push(skill);
-            });
-        const cardTemplate = document.querySelector("template");
-        const card = cardTemplate.content.cloneNode(true);
-        console.log(cardTemplate);
-        card.querySelector("h2").innerText = employee.login;
-        card.querySelector("br").innerText = skills.join(', ');
-        document.body = card;
-    });
-    }
     

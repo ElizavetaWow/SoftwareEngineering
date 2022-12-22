@@ -44,7 +44,6 @@ app.get("/people/all", Person.showAll);
 app.get("/personskill/:id", PersonSkill.findByPerson);
 
 
-
 app.post('/employees/create', Employee.create);
 app.post("/projects/create", Project.create);
 app.post("/grades/create", Grade.create);
@@ -72,7 +71,11 @@ app.get("/profile", (req, res) => {
     res.sendFile(path.join(__dirname, '/public/profile.html'));
 });
 
-
+app.get("/personemployee/emp", (req, res) => {
+    const personid = req.query.id;
+    PersonEmployee.findRecordByEmployee(personid).then((results) => {
+        res.json(JSON.stringify(results))})
+});
 
 
 //projects

@@ -11,7 +11,7 @@ const addPersonEmployee = async(data) => {
     try {
         const results = findRecordByPersonEmployee(data).then(async foundRecord => {
             if (foundRecord == undefined) {
-                var sql = `INSERT INTO personright(person_personid, employee_personid) VALUES('${data.person_personid}', '${data.employee_personid}')`;
+                var sql = `INSERT INTO personemployee(person_personid, employee_personid) VALUES('${data.person_personid}', '${data.employee_personid}')`;
                 await pool.query(sql);
                 return 'true';
             }
@@ -26,19 +26,19 @@ const addPersonEmployee = async(data) => {
 
 const findRecordByEmployee = async(personid) => {
     var sql = `
-            SELECT * FROM personright WHERE employee_personid = ${personid}
+            SELECT * FROM personemployee WHERE employee_personid = '${personid}'
             `;
     const results = await pool
         .query(sql)
         .then((data) => {
-            return data.rows;
+            return data.rows[0];
         })
     return results;
 }
 
 const findRecordByPerson = async(personid) => {
     var sql = `
-            SELECT * FROM personright WHERE person_personid = ${personid}
+            SELECT * FROM personemployee WHERE person_personid = '${personid}'
             `;
     const results = await pool
         .query(sql)
@@ -50,7 +50,7 @@ const findRecordByPerson = async(personid) => {
 
 const findRecordByPersonEmployee = async(data) => {
     var sql = `
-            SELECT * FROM personright WHERE (person_personid = ${data.person_personid} AND employee_personid = ${data.employee_personid})
+            SELECT * FROM personemployee WHERE (person_personid = '${data.person_personid}' AND employee_personid = '${data.employee_personid}')
             `;
     const results = await pool
         .query(sql)
@@ -84,5 +84,6 @@ module.exports = {
     addPersonEmployee,
     findByPerson,
     findByEmployee,
-    findRecordByPersonEmployee
+    findRecordByPersonEmployee,
+    findRecordByEmployee
 }

@@ -231,6 +231,19 @@ const findLeaveByIsVacation = async(leave) => {
         })
     return results;
 }
+
+const findLeaveByPerson = async(personid) => {
+    var sql = `
+            SELECT * FROM leave WHERE person_personid = '${ personid }'
+            `;
+    const results = await pool
+        .query(sql)
+        .then((data) => {
+            return data.rows;
+        })
+    return results;
+}
+
 const updateLeaveStart = async(leave) => {
     try {
         const results = findLeaveByStartEndIsVacation(leave).then(async foundLeave => {
@@ -313,4 +326,5 @@ module.exports = {
     findLeaveByStart,
     findLeaveByEnd,
     findLeaveByStartEnd,
+    findLeaveByPerson
 }

@@ -17,6 +17,8 @@ const PersonRight = require('./models/personright.js');
 const PersonEmployee = require('./models/personemployee.js');
 const PersonSkill = require('./models/personskill.js');
 const RequiredSkill = require('./models/requiredskill.js');
+const Leave = require('./models/leave.js');
+
 const path = require('path');
 const credentials = {
     user: "root",
@@ -34,7 +36,6 @@ app.use(bodyParser.urlencoded({
 app.use(express.static("public"));
 
 
-app.get("/grades/all", Grade.showAll);
 app.get("/projectrecords/all", ProjectRecord.showAll);
 app.get("/rights/all", Rightt.showAll);
 app.get("/skills/all", Skill.showAll);
@@ -90,11 +91,21 @@ app.get("/projectrecord/person", (req, res) => {
 });
 
 //grades
+app.get("/grades/all", Grade.showAll);
 app.get("/grade", (req, res) => {
     const gradeid = req.query.id;
     Grade.findGradeById(gradeid).then((results) => {
         res.json(JSON.stringify(results))})
 });
+
+//leaves
+app.get("/leaves/all", Leave.showAll);
+app.get("/leave/person", (req, res) => {
+    const personid = req.query.id;
+    Leave.findLeaveByPerson(personid).then((results) => {
+        res.json(JSON.stringify(results))})
+});
+
 
 
 //projects

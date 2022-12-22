@@ -50,8 +50,32 @@ fetch(`/personemployee/emp?id=` + id)
                     td[2].textContent = new Date(projectrecord.end_date).toLocaleDateString("ru-RU");
                     td[3].textContent = projectrecord.hoursperweek;
                     let projectResult = await fetch(`/project?id=` + projectrecord.project_projectid)
-                        .then((response) => {return response.json()})
+                        .then((response) => { return response.json() })
                     td[0].textContent = JSON.parse(projectResult).name
+                    tbody.appendChild(clone)
+
+                });
+
+
+            });
+        fetch(`/leave/person?id=` + id)
+            .then((response) => response.json())
+            .then((data) => {
+                data = JSON.parse(data)
+                
+                data.forEach(async (leave) => {
+                    const tbody = document.querySelector("#leaves").querySelector("tbody");
+                    const template = document.querySelector('#leaverow');
+                    const clone = template.content.cloneNode(true);
+                    let td = clone.querySelectorAll("td");
+                    let isvacationText = ""
+                    if (leave.isvacation) isvacationText = "Отпуск"
+                    else isvacationText = "Больничный";
+                    td[0].textContent = isvacationText;
+                    td[1].textContent = new Date(leave.start_date).toLocaleDateString("ru-RU");
+                    td[2].textContent = new Date(leave.end_date).toLocaleDateString("ru-RU");
+
+
                     tbody.appendChild(clone)
 
                 });

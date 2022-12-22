@@ -171,7 +171,7 @@ const findById = async(req, res) => {
 }
 
 const findGradeById = async(gradeid) => {
-    var sql = `SELECT * FROM grade WHERE gradeid = ${ gradeid }`;
+    var sql = `SELECT * FROM grade WHERE gradeid = '${ gradeid }'`;
     const results = await pool
         .query(sql)
         .then((data) => {
@@ -191,5 +191,6 @@ module.exports = {
     updateGradeName,
     showAll,
     findGradeByName,
-    findById
+    findById,
+    findGradeById
 }

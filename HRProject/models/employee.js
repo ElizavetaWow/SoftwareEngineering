@@ -146,7 +146,7 @@ const findById = async(req, res) => {
 }
 
 const findEmployeeById = async(employeeId) => {
-    var sql = `SELECT * FROM employee WHERE personid = ${ employeeId }`;
+    var sql = `SELECT * FROM employee WHERE personid = '${ employeeId }'`;
     const results = await pool
         .query(sql)
         .then((data) => {
@@ -580,5 +580,6 @@ module.exports = {
     updateDismissDate,
     showAll,
     updateGrade,
-    findById
+    findById,
+    findEmployeeById
 }

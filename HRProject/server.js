@@ -66,7 +66,13 @@ app.post('/employees/find/bygrade', Employee.findByGrade);
 
 //employees
 app.get("/employees/all", Employee.showAll);
-app.post("/employee", Employee.findById);
+//app.post("/employee", Employee.findById); нужно ли
+app.get("/employee", (req, res) => {
+    const personid = req.query.id;
+    Employee.findEmployeeById(personid).then((results) => {
+        res.json(JSON.stringify(results))})
+});
+
 app.get("/profile", (req, res) => {
     res.sendFile(path.join(__dirname, '/public/profile.html'));
 });
@@ -80,6 +86,13 @@ app.get("/personemployee/emp", (req, res) => {
 app.get("/projectrecord/person", (req, res) => {
     const personid = req.query.id;
     ProjectRecord.findProjectrecordByPerson(personid).then((results) => {
+        res.json(JSON.stringify(results))})
+});
+
+//grades
+app.get("/grade", (req, res) => {
+    const gradeid = req.query.id;
+    Grade.findGradeById(gradeid).then((results) => {
         res.json(JSON.stringify(results))})
 });
 

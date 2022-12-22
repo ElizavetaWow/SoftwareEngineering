@@ -8,6 +8,21 @@ fetch(`/personemployee/emp?id=` + id)
         data = JSON.parse(data)
         personId = data.person_personid
     }).then(() => {
+        fetch(`/employee?id=` + id)
+            .then((response) => response.json())
+            .then((data) => {
+                data = JSON.parse(data)
+                fetch(`/grade?id=` + data.grade_gradeid)
+                    .then((response) => response.json())
+                    .then((data) => {
+                        data = JSON.parse(data)
+                        const body = document.querySelector("#grade");
+                        const template = document.querySelector('#graderes');
+                        const clone = template.content.cloneNode(true);
+                        clone.querySelector("p").innerText = data.name;
+                        body.appendChild(clone);
+                    })
+            });
         fetch(`/personskill/${personId}`)
             .then((response) => response.json())
             .then((data) => {

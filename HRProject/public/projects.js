@@ -74,3 +74,31 @@ function send() {
       });
   }
 }
+
+function add() {
+    let name = document.querySelector('input[name="name"]').value
+    let start_date = document.querySelector('input[name="start_date"]').value
+    let end_date = document.querySelector('input[name="end_date"]').value
+  
+    if (name || start_date || end_date) {
+      fetch("/projects/create", {
+        method: "post",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: name,
+          start_date: start_date,
+          end_date: end_date
+        })
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          alert("Создано");  
+        });
+    }
+    else {
+        alert("Ошибка создания"); 
+    }
+  }

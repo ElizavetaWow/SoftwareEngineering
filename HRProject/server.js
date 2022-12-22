@@ -66,6 +66,9 @@ app.post('/employees/update', Employee.updateGrade);
 app.post('/employees/find/bygrade', Employee.findByGrade);
 
 //employees
+app.get('/employees', (req, res) => {
+    res.sendFile(path.join(__dirname, '/public/index.html'));
+});
 app.get("/employees/all", Employee.showAll);
 //app.post("/employee", Employee.findById); нужно ли
 app.get("/employee", (req, res) => {

@@ -33,7 +33,7 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.static("public"));
 
-app.get("/employees/all", Employee.showAll);
+
 app.get("/grades/all", Grade.showAll);
 app.get("/projectrecords/all", ProjectRecord.showAll);
 app.get("/rights/all", Rightt.showAll);
@@ -43,7 +43,7 @@ app.get("/vacancys/all", Vacancy.showAll);
 app.get("/people/all", Person.showAll);
 app.get("/personskill/:id", PersonSkill.findByPerson);
 
-app.post("/employee", Employee.findById);
+
 
 app.post('/employees/create', Employee.create);
 app.post("/projects/create", Project.create);
@@ -64,6 +64,16 @@ app.post('/signin', Employee.signin);
 
 app.post('/employees/update', Employee.updateGrade);
 app.post('/employees/find/bygrade', Employee.findByGrade);
+
+//employees
+app.get("/employees/all", Employee.showAll);
+app.post("/employee", Employee.findById);
+app.get("/profile", (req, res) => {
+    res.sendFile(path.join(__dirname, '/public/profile.html'));
+});
+
+
+
 
 //projects
 app.get('/projects', (req, res) => {

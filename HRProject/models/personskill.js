@@ -38,7 +38,6 @@ const findRecordBySkill = async(skillid) => {
 }
 
 const findRecordByPerson = async(personid) => {
-    console.log(personid);
     var sql = `
             SELECT * FROM personskill JOIN skill on personskill.skill_skillid=skill.skillid WHERE person_personid = ${personid}
             `;
@@ -47,7 +46,6 @@ const findRecordByPerson = async(personid) => {
         .then((data) => {
             return data.rows;
         })
-    console.log(results)
     return results;
 }
 

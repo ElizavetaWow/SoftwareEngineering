@@ -1,4 +1,4 @@
-fetch("/employees")
+fetch("/employees/all")
     .then((response) => response.json())
     .then((data) => {
         data.forEach((employee) => {
@@ -7,17 +7,12 @@ fetch("/employees")
 
             card.querySelector("h4").innerText = employee.login;
             card.querySelector(".card").id = employee.personid.toString();
-            //card.querySelector("h5").innerText = 'aaaaa';
             card.id = employee.personid.toString();
             card.employee = employee.login;
-    //         fetch("/skills").then((response) => response.json()).then((data) => {
-    //             data.forEach((skill) => {
-    //                 if(skill.personid==employee.personid)  {
-                    
-    //                 }
-    //     });
-    // });
             document.body.appendChild(card);
         });
     });
-    
+
+    function openProfile(id) {
+        window.open(`http://localhost:9000/profile?id=`+id)
+    }

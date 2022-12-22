@@ -147,7 +147,7 @@ const findByPersonProject = (req, res) => {
 
 const findProjectrecordByPersonProject = async(projectrecord) => {
     var sql = `
-            SELECT * FROM projectrecord WHERE (person_personid = ${projectrecord.personid} AND project_projectid = ${projectrecord.projectid})
+            SELECT * FROM projectrecord WHERE (person_personid = '${projectrecord.personid}' AND project_projectid = '${projectrecord.projectid}')
             `;
     const results = await pool
         .query(sql)
@@ -157,9 +157,9 @@ const findProjectrecordByPersonProject = async(projectrecord) => {
     return results;
 }
 
-const findProjectrecordByPerson = async(projectrecord) => {
+const findProjectrecordByPerson = async(personid) => {
     var sql = `
-            SELECT * FROM projectrecord WHERE person_personid = ${projectrecord.personid}
+            SELECT * FROM projectrecord WHERE person_personid = '${personid}'
             `;
     const results = await pool
         .query(sql)

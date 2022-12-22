@@ -269,7 +269,7 @@ const findById = async(req, res) => {
 
 const findProjectById = async(projectid) => {
     var sql = `
-            SELECT * FROM project WHERE projectid = ${projectid}
+            SELECT * FROM project WHERE projectid = '${projectid}'
             `;
     const results = await pool
         .query(sql)
@@ -415,5 +415,6 @@ module.exports = {
     findProjectByStartEnd,
     findProjectByEnd,
     findProjectByStart,
-    findProjectByName
+    findProjectByName,
+    findProjectById
 }

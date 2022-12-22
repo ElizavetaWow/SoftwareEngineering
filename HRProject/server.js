@@ -77,12 +77,25 @@ app.get("/personemployee/emp", (req, res) => {
         res.json(JSON.stringify(results))})
 });
 
+app.get("/projectrecord/person", (req, res) => {
+    const personid = req.query.id;
+    ProjectRecord.findProjectrecordByPerson(personid).then((results) => {
+        res.json(JSON.stringify(results))})
+});
+
 
 //projects
 app.get('/projects', (req, res) => {
     res.sendFile(path.join(__dirname, '/public/projects.html'));
 });
 app.get('/projects/all', Project.showAll);
+
+app.get("/project", (req, res) => {
+    const projectid = req.query.id;
+    Project.findProjectById(projectid).then((results) => {
+        res.json(JSON.stringify(results))})
+});
+
 app.post('/projects/find',  (req, res) => {
     const project = req.body;
     if (project.name && project.start_date && project.end_date){

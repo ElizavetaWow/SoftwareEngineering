@@ -2,6 +2,9 @@
     transform: scale(1.03);
 }
 
+input[type=checkbox] {
+    transform: scale(1.5);
+}
 
 img {
     border-radius: 5px 5px 0 0;

@@ -27,7 +27,7 @@ const addPersonSkill = async(data) => {
 
 const findRecordBySkill = async(skillid) => {
     var sql = `
-            SELECT * FROM personskill WHERE skill_skillid = ${skillid}
+            SELECT * FROM personskill WHERE skill_skillid = '${skillid}'
             `;
     const results = await pool
         .query(sql)
@@ -39,7 +39,7 @@ const findRecordBySkill = async(skillid) => {
 
 const findRecordByPerson = async(personid) => {
     var sql = `
-            SELECT * FROM personskill JOIN skill on personskill.skill_skillid=skill.skillid WHERE person_personid = ${personid}
+            SELECT * FROM personskill JOIN skill on personskill.skill_skillid=skill.skillid WHERE person_personid = '${personid}'
             `;
     const results = await pool
         .query(sql)
@@ -51,7 +51,7 @@ const findRecordByPerson = async(personid) => {
 
 const findRecordByPersonSkill = async(data) => {
     var sql = `
-            SELECT * FROM personskill WHERE (person_personid = ${data.body.personid} AND skill_skillid = ${data.body.skillid})
+            SELECT * FROM personskill WHERE (person_personid = '${data.body.personid}' AND skill_skillid = '${data.body.skillid}')
             `;
     const results = await pool
         .query(sql)

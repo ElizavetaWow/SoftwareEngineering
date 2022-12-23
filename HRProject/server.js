@@ -65,6 +65,16 @@ app.post('/signin', Employee.signin);
 app.post('/employees/update', Employee.updateGrade);
 app.post('/employees/find/bygrade', Employee.findByGrade);
 
+app.get('/dialog', (req, res) => {
+    res.sendFile(path.join(__dirname, '/public/dialog.html'));
+});
+
+app.get("/skill", (req, res) => {
+    const skillname = req.query.name;
+    Skill.findSkillByName(skillname).then((results) => {
+        res.json(JSON.stringify(results))})
+});
+
 //employees
 app.get('/employees', (req, res) => {
     res.sendFile(path.join(__dirname, '/public/index.html'));

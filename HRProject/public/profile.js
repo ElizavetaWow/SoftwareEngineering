@@ -97,3 +97,47 @@ fetch(`/personemployee/emp?id=` + id)
             });
     })
 
+function addSkill() {
+    fetch("/skills/all")
+        .then((response) => response.json())
+        .then((data) => {
+            var newWin = window.open('http://localhost:9000/dialog', 'Выбор', 'width=600,height=400');
+            newWin.onload = function () {
+                let inp = newWin.document.querySelector("#person")
+                inp.value = personId
+                let h1 = newWin.document.querySelector("h1")
+                h1.textContent = "Навыки"
+                let tr = document.createElement('tr');
+                let th0 = document.createElement('th');
+                th0.textContent = "Выбрано";
+                let th1 = document.createElement('th');
+                th1.textContent = "Название";
+                let th2 = document.createElement('th');
+                th2.textContent = "Описание";
+                tr.appendChild(th0);
+                tr.appendChild(th1);
+                tr.appendChild(th2);
+                let thead = newWin.document.querySelector("thead");
+                thead.appendChild(tr);
+                
+                data.forEach((skill) => {
+                    const tbody = newWin.document.querySelector("tbody");
+                    let tr = document.createElement('tr');
+                    const chb = newWin.document.querySelector("#chb").content.cloneNode(true);
+                    
+                    let td1 = document.createElement('td');
+                    td1.textContent = skill.name;
+                    let td2 = document.createElement('td');
+                    td2.textContent = skill.description;
+                    tr.appendChild(chb);
+                    tr.appendChild(td1);
+                    tr.appendChild(td2);
+
+                    tbody.appendChild(tr);
+
+                });
+            }
+        });
+        
+
+}

@@ -114,7 +114,7 @@ const updateName = (req, res) => {
 const createSkill = async(skill) => {
     try {
         const results = findSkillByName(skill).then(async foundSkill => {
-            if (foundSkill.length==0) {
+            if (foundSkill== undefined) {
                 var sql = `
             INSERT INTO skill(name, description) VALUES('${skill.name}', '${skill.description}')
             `;
@@ -150,14 +150,14 @@ const deleteSkill = async(skill) => {
     }
 }
 
-const findSkillByName = async(skill) => {
+const findSkillByName = async(name) => {
     var sql = `
-            SELECT * FROM grade WHERE name = '${skill.name}'
+            SELECT * FROM skill WHERE name = '${name}'
             `;
     const results = await pool
         .query(sql)
         .then((data) => {
-            return data.rows;
+            return data.rows[0];
         })
     return results;
 }

@@ -10,18 +10,24 @@ const pool = new Pool(credentials);
 
 const create = (req, res) => {
     const project = req.body
+    let start_date = new Date(project.start_date).toISOString()
+    let end_date = new Date(project.end_date).toISOString()
+    if (start_date <= end_date){
     createProject(project).then((status) => {
         if (status == 'true') {
-            res.status(201).json({ "status": true, "result": 'Operation successful!' })
+            res.status(201).json({ "status": true, "result": 'Создано!' })
         } else if (status == 'already exists') {
-            res.status(200).json({ "status": false, "result": "Already exists!" })
+            res.status(200).json({ "status": false, "result": "Уже существует!" })
         } else {
-            res.status(200).json({ "status": false, "result": "Request Failed!" })
+            res.status(200).json({ "status": false, "result": "Неверный запрос!" })
         }
     }).catch((error) => {
         console.log(error)
-        res.status(500).json({ "status": false, "result": "Request Failed!" })
-    })
+        res.status(500).json({ "status": false, "result": "Неверный запрос!" })
+    })}
+    else{
+        res.status(200).json({ "status": false, "result": "Дата окончания не может быть раньше даты начала!" })
+    }
 
 }
 
@@ -184,15 +190,16 @@ const updateEnd = (req, res) => {
 
 const createProject = async(project) => {
     try {
-        const results = findProjectByNameStartEnd(project).then(async foundProject => {
-            if (foundProject == undefined) {
+        let results = await findProjectByNameStartEnd(project).then(async (foundProject) => {
+            if (foundProject.length == 0) {
                 var sql = `
             INSERT INTO project(name, start_date, end_date) VALUES('${project.name}', '${project.start_date}', '${project.end_date}')
             `;
-                await pool.query(sql);
-                return 'true';
+                return await pool.query(sql) .then((data) => {
+                    return 'true';
+                })
             }
-            return 'already exists';
+            else return 'already exists';
         })
         return results;
     } catch (error) {

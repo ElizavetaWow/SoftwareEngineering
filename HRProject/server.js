@@ -46,7 +46,7 @@ app.get("/personskill/:id", PersonSkill.findByPerson);
 
 
 app.post('/employees/create', Employee.create);
-app.post("/projects/create", Project.create);
+
 app.post("/grades/create", Grade.create);
 app.post("/projectrecords/create", ProjectRecord.create);
 app.post("/rights/create", Rightt.create);
@@ -74,6 +74,11 @@ app.get("/employees/all", Employee.showAll);
 app.get("/employee", (req, res) => {
     const personid = req.query.id;
     Employee.findEmployeeById(personid).then((results) => {
+        res.json(JSON.stringify(results))})
+});
+app.get("/person", (req, res) => {
+    const personid = req.query.id;
+    Person.findPersonById(personid).then((results) => {
         res.json(JSON.stringify(results))})
 });
 
@@ -168,6 +173,7 @@ app.post('/projects/find',  (req, res) => {
     }
 
 });
+app.post("/projects/create", Project.create);
 
 
 app.get("/signin", (req, res) => {

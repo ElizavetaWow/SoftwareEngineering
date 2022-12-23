@@ -425,7 +425,7 @@ const findPersonByIsEmployee = async(person) => {
 
 const findPersonById = async(personid) => {
     var sql = `
-            SELECT * FROM project WHERE personid = ${personid}
+            SELECT * FROM person WHERE personid = '${personid}'
             `;
     const results = await pool
         .query(sql)
@@ -692,5 +692,6 @@ module.exports = {
     updateComment,
     updateIsEmployee,
     showAll,
-    findById
+    findById,
+    findPersonById
 }

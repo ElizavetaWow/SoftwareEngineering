@@ -27,5 +27,5 @@ fetch("/employees/all")
     });
 
 function openProfile(id) {
-    window.open(`http://localhost:9000/profile?id=` + id)
+    window.open(`http://localhost:9000/profile?id=` + id,"_self")
 }

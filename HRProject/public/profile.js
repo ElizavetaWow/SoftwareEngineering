@@ -8,6 +8,22 @@ fetch(`/personemployee/emp?id=` + id)
         data = JSON.parse(data)
         personId = data.person_personid
     }).then(() => {
+        fetch(`/person?id=` + personId)
+            .then((response) => response.json())
+            .then((data) => {
+                data = JSON.parse(data)
+                let td = document.querySelector("#name").querySelectorAll("td");
+                td[2].textContent = data.name
+                td = document.querySelector("#email").querySelectorAll("td");
+                td[1].textContent = data.email
+                td = document.querySelector("#workphonenumber").querySelectorAll("td");
+                td[1].textContent = data.workphonenumber
+                td = document.querySelector("#personalphonenumber").querySelectorAll("td");
+                td[1].textContent = data.personalphonenumber
+                td = document.querySelector("#comment").querySelectorAll("td");
+                td[1].textContent = data.comment
+
+            });
         fetch(`/employee?id=` + id)
             .then((response) => response.json())
             .then((data) => {
@@ -16,11 +32,8 @@ fetch(`/personemployee/emp?id=` + id)
                     .then((response) => response.json())
                     .then((data) => {
                         data = JSON.parse(data)
-                        const body = document.querySelector("#grade");
-                        const template = document.querySelector('#graderes');
-                        const clone = template.content.cloneNode(true);
-                        clone.querySelector("p").innerText = data.name;
-                        body.appendChild(clone);
+                        let td = document.querySelector("#grade").querySelectorAll("td");
+                        td[1].textContent = data.name
                     })
             });
         fetch(`/personskill/${personId}`)
@@ -62,7 +75,7 @@ fetch(`/personemployee/emp?id=` + id)
             .then((response) => response.json())
             .then((data) => {
                 data = JSON.parse(data)
-                
+
                 data.forEach(async (leave) => {
                     const tbody = document.querySelector("#leaves").querySelector("tbody");
                     const template = document.querySelector('#leaverow');

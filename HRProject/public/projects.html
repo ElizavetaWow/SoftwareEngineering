@@ -58,15 +58,15 @@
                     <input class="form-control" type="date" name="start_date"><br>
                 </div>
                 <div class="col">
-                    <label for="end_date">Дата начала</label>
+                    <label for="end_date">Дата конца</label>
                     <input class="form-control" type="date" name="end_date"><br>
                 </div>
 
             </div>
             
-            <button type="button" onclick="send()" class="btn btn-warning">Отфильтровать</button>
-            <button type="button" onclick="clearFields()" class="btn btn-outline-dark">Сбросить фильтры</button>
-            <button type="button" onclick="add()" class="btn btn-outline-warning float-end">Создать новый</button>
+            <button type="button" onclick="errorDecorator(send())" class="btn btn-warning">Отфильтровать</button>
+            <button type="button" onclick="errorDecorator(clearFields())" class="btn btn-outline-dark">Сбросить фильтры</button>
+            <button type="button" onclick="errorDecorator(add())" class="btn btn-outline-warning float-end">Создать новый</button>
         </div>
     </div>
     

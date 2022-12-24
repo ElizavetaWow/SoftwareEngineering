@@ -14,6 +14,16 @@ fetch("/projects/all")
     });
   });
 
+function errorDecorator(func) {
+  console.log("декоратор работает")
+  try{
+    return func;
+  } catch (err) {
+    alert(err);
+  }
+  
+}
+
 function send() {
   let name = document.querySelector('input[name="name"]').value
   let start_date = document.querySelector('input[name="start_date"]').value
@@ -37,7 +47,6 @@ function send() {
         const tbody = document.querySelector("tbody");
         tbody.replaceChildren();
         data = JSON.parse(data)
-        try {
           data.forEach((project) => {
             const tbody = document.querySelector("tbody");
             const template = document.querySelector('#projectrow');
@@ -48,9 +57,6 @@ function send() {
             td[2].textContent = new Date(project.end_date).toLocaleDateString("ru-RU");
             tbody.appendChild(clone);
           });
-        } catch (err) {
-          console.log(err)
-        }
 
       });
   }
@@ -99,7 +105,7 @@ function add() {
       });
   }
   else {
-    alert("Заполните поля формы!");
+    alert("Заполните поля формы");
   }
 }
 
